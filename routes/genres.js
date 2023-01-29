@@ -1,39 +1,34 @@
-const router = require("express").Router();
-const {Genre,validate}=require('../models/genres')
-router.get("/", async (req, res) => {
+const { validateGenre, Genre } = require('../models/genres')
+
+const router=require('express').Router()
+
+
+router.post("/",async(req,res)=>{
+    const {error}=validateGenre(req.body);
+    if(error){
+        return res.status(400).send(error.details[0].message)
+    }
+    const genre=new Genre({
+        name:req.body.name
+    })
+    try{
+     await genre.save();
+    }
+    catch(error){
+        const err=[]
+        for(field in error.errors){
+            err.push(error.errors[field])
+        }
+        res.send(err)
+    }
+    return res.send(genre)
+
+
     
-  return res.send(await Genre.find());
-});
+})
+router.get("",async(req,res)=>{})
+router.get("",async(req,res)=>{})
+router.put("",async(req,res)=>{})
+router.delete("",async(req,res)=>{})
 
-router.get("/:id", async (req, res) => {
-  const genre = await Genre.findById(req.params.id);
-  if (!genre) return res.status(404).send("Genre not found");
-  return res.send(genre);
-});
-router.post("/", async (req, res) => {
-  const { error } = validate(req.body);
-  if (error) res.status(400).send(error.details[0].message);
-  const genre = new Genre({
-    name: req.body.name,
-  });
-  await genre.save();
-  res.send(genre);
-});
-router.put("/:id", async (req, res) => {
-  const genre = await Genre.findById(req.params.id);
-  if (!genre) return res.status(404).send("Genre not found");
-
-  const { error } = validate(req.body);
-  if (error) res.status(400).send(error.details[0].message);
-  genre.set({ name: req.body.name });
-  await genre.save();
-  res.send(genre);
-});
-router.delete("/:id", async (req, res) => {
-  const genre = await Genre.findById(req.params.id);
-  if (!genre) return res.status(404).send("Genre not found");
-  await Genre.deleteOne({ _id: req.params.id });
-  res.send(genre);
-});
-
-exports.genreRouter=router
+module.exports.genreRouter=router

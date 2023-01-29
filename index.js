@@ -1,8 +1,9 @@
 const express=require('express')
 const mongoose=require('mongoose')
-const {router}=require('./routes/movies')
+const router=require('./routes/movies')
 const {genreRouter}=require('./routes/genres')
-
+const Joi=require("joi")
+Joi.objectId=require("joi-objectid")(Joi)
 mongoose.connect("mongodb://localhost:27017/playground")
 .then(()=>console.log("Connected to MongoDB..."))
 .catch((err)=>console.log(err))
