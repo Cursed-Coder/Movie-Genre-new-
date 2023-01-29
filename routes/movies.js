@@ -12,78 +12,76 @@ router.post("", async (req, res) => {
   for (genreIdx in req.body.genres) {
     genres2.add(req.body.genres[genreIdx]);
   }
-  genres3 = [];
-  genres2.forEach(function (c) {
-    genres3.push(c);
-  });
-  for (i in genres3) {
-    const tempGenreId = genres3[i];
-    const tempGenre = await Genre.findById(tempGenreId);
-    if (!tempGenre) {
-      return res.status(404).send("You have entered an invalid genre....");
-    }
-
-    const genre = new Genre();
-    // console.log(tempGenre)
-    // console.log(genre)
-    // console.log(tempGenre._doc.name)
-    genre._doc._id = tempGenre._doc._id;
-    genre._doc.name = tempGenre._doc.name;
-    // console.log(genre)
-    genres.push(genre);
-  }
-  // async function dummyFunction() {
-  //   p=[]
-  //  p.push(genres2.forEach( function (v) {
-  //     // console.log(v)
-  //     const tempGenreId=v;
-  //     return Genre.findById(tempGenreId);
-  //     if (!tempGenre) {
-  //       return res.status(404).send("You have entered an invalid genre....");
-  //     }
-
-  //     const genre = new Genre();
-  //     // console.log(tempGenre)
-  //     // console.log(genre)
-  //     // console.log(tempGenre._doc.name)
-  //     genre._doc._id = tempGenre._doc._id;
-  //     genre._doc.name = tempGenre._doc.name;
-  //     // console.log(genre)
-  //     genres.push(genre);
-  //     // console.log(genres.length);
-  //   }));
-  //   Promise.all(p).then(result=>
-  //     console.log(result)
-  //   )
-  //   console.log(genres.length);
-    const movie = new Movie({
-      title: req.body.title,
-      genres: genres,
-      numberInStock: req.body.numberInStock,
-      dailyRentalCost: req.body.dailyRentalCost,
-    });
-    try {
-      const result = await movie.save();
-      console.log(result);
-      res.send(movie);
-    } catch (ex) {
-      let err = [];
-      for (field in ex.errors) {
-        err.push(ex.errors[field].message);
-      }
-      // console.log('Hello')
-      // console.log(ex)
-      return res.send(err);
-    }
-  // }
-  // dummyFunction();
-  // genres.forEach(function (c) {
-  //   console.log(c);
+  // genres3 = [];
+  // genres2.forEach(function (c) {
+  //   genres3.push(c);
   // });
-  // for(i in genres2){
-  //   console.log(i)
-  //   genres.push(i)
+  // for (i in genres3) {
+  //   const tempGenreId = genres3[i];
+  //   const tempGenre = await Genre.findById(tempGenreId);
+  //   if (!tempGenre) {
+  //     return res.status(404).send("You have entered an invalid genre....");
+  //   }
+
+  //   const genre = new Genre();
+  //   // console.log(tempGenre)
+  //   // console.log(genre)
+  //   // console.log(tempGenre._doc.name)
+  //   genre._doc._id = tempGenre._doc._id;
+  //   genre._doc.name = tempGenre._doc.name;
+  //   // console.log(genre)
+  //   genres.push(genre);
   // }
+  async function dummyFunction() {
+    console.log("Hello");
+
+    const p = [];
+    genres2.forEach(function (v) {
+      const tempGenreId = v;
+      p.push(Genre.findById(tempGenreId));
+    });
+    // console.log(p.length);
+    Promise.all(p).then(async (result) => {
+      result.forEach(function (tempGenre) {
+        const genre = new Genre();
+        // console.log(tempGenre._doc.name)
+        genre._doc._id = tempGenre._doc._id;
+        genre._doc.name = tempGenre._doc.name;
+        // console.log(genre)
+        genres.push(genre);
+      });
+      console.log(genres.length);
+      const movie = new Movie({
+        title: req.body.title,
+        genres: genres,
+        numberInStock: req.body.numberInStock,
+        dailyRentalCost: req.body.dailyRentalCost,
+      });
+      try {
+        const result = await movie.save();
+        console.log(result);
+        res.send(movie);
+      } catch (ex) {
+        let err = [];
+        for (field in ex.errors) {
+          err.push(ex.errors[field].message);
+        }
+        // console.log('Hello')
+        // console.log(ex)
+        return res.send(err);
+      }
+    });
+
+    // }
+    // genres.forEach(function (c) {
+    //   console.log(c);
+    // });
+    // for(i in genres2){
+    //   console.log(i)
+    //   genres.push(i)
+    // }
+  }
+  dummyFunction();
 });
 router.get("", async (req, res) => {});
 router.get("", async (req, res) => {});
